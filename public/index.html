@@ -3,32 +3,88 @@
 <head>
   <style>
     body {
-      font-family: Arial;
-      background: #f4f4f4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
     #chatbox {
-      width: 400px;
+      width: 450px;
       background: white;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 50px;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
     }
 
     #chat {
-      height: 300px;
+      height: 350px;
       overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+    }
+
+    #input-area {
+      display: flex;
+      gap: 10px;
     }
 
     input {
-      width: 70%;
-      padding: 8px;
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      outline: none;
     }
 
     button {
-      padding: 8px;
+      padding: 10px 15px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #5a6fd8;
+    }
+
+    #clear-btn {
+      background: #ff6b6b;
+      margin-top: 10px;
+    }
+
+    #clear-btn:hover {
+      background: #ff5252;
+    }
+
+    .message {
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+
+    .user {
+      background: #667eea;
+      color: white;
+      align-self: flex-end;
+      margin-left: auto;
+    }
+
+    .bot {
+      background: #e0e0e0;
+      color: #333;
     }
   </style>
 </head>
@@ -39,27 +95,55 @@
 
   <div id="chat"></div>
 
-  <input id="msg" placeholder="Escribe...">
-  <button onclick="send()">Enviar</button>
+  <div id="input-area">
+    <input id="msg" placeholder="Escribe tu mensaje..." onkeypress="handleKeyPress(event)">
+    <button onclick="send()">Enviar</button>
+  </div>
+  <button id="clear-btn" onclick="clearChat()">Limpiar Chat</button>
 </div>
 
 <script>
-async function send(){
-  let msg = document.getElementById("msg").value;
+document.addEventListener("DOMContentLoaded", function() {
+  addMessage("Bot", "Hola 👋 ¿En qué puedo ayudarte? Escribe: cursos, pdf, redes o comprar", "bot");
+});
+
+function handleKeyPress(event) {
+  if (event.key === "Enter") {
+    send();
+  }
+}
+
+async function send() {
+  let msg = document.getElementById("msg").value.trim();
+  if (!msg) return;
+
+  addMessage("Tú", msg, "user");
 
   let res = await fetch("/chat", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
     body: JSON.stringify({message: msg})
   });
 
   let data = await res.json();
 
-  document.getElementById("chat").innerHTML += 
-    "<p><b>Tú:</b> "+msg+"</p>" +
-    "<p><b>Bot:</b> "+data.reply+"</p>";
+  addMessage("Bot", data.reply, "bot");
 
   document.getElementById("msg").value = "";
+  document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+}
+
+function addMessage(sender, text, type) {
+  let chat = document.getElementById("chat");
+  let msgDiv = document.createElement("div");
+  msgDiv.className = "message " + type;
+  msgDiv.innerHTML = "<b>" + sender + ":</b> " + text.replace(/\n/g, "<br>");
+  chat.appendChild(msgDiv);
+}
+
+function clearChat() {
+  document.getElementById("chat").innerHTML = "";
+  addMessage("Bot", "Chat limpiado. ¿En qué puedo ayudarte?", "bot");
 }
 </script>
 
