@@ -7,33 +7,38 @@ app.use(express.static("public"));
 app.post("/chat", (req, res) => {
   const msg = req.body.message.toLowerCase().trim();
 
+ app.post("/chat", (req, res) => {
+  const msg = req.body.message.toLowerCase();
+
   let reply = "";
 
-  if (msg.includes("curso") || msg.includes("cursos")) {
-    reply = "🎓 Cursos disponibles:\n👉 https://tusitio.com/cursos\n¿Te interesa algún curso específico?";
-  } 
-  else if (msg.includes("pdf") || msg.includes("catálogo")) {
-    reply = "📄 Descarga el catálogo:\n👉 /docs/catalogo.pdf\n¿Necesitas ayuda con algo más?";
-  } 
-  else if (msg.includes("redes") || msg.includes("sociales")) {
-    reply = "📱 Síguenos en redes:\nInstagram: https://instagram.com/tucliente\nFacebook: https://facebook.com/tucliente";
-  } 
-  else if (msg.includes("comprar") || msg.includes("compra")) {
-    reply = "💳 Compra aquí:\n👉 https://linkdepago.com\n¿Quieres más detalles sobre productos?";
-  } 
-  else if (msg.includes("hola") || msg.includes("hi")) {
-    reply = "Hola 👋 ¿En qué puedo ayudarte? Escribe: cursos, pdf, redes o comprar";
+  if (msg.includes("hola")) {
+    reply = "👋 ¡Hola! ¿Buscas cursos, pdf o comprar?";
+  }
+  else if (msg.includes("curso")) {
+    reply = "🎓 Tenemos cursos de marketing, IA y ventas 🚀";
+  }
+  else if (msg.includes("pdf")) {
+    reply = "📄 Puedes descargar el catálogo aquí:\n👉 /docs/catalogo.pdf";
+  }
+  else if (msg.includes("precio")) {
+    reply = "💰 Los precios empiezan desde $10";
+  }
+  else if (msg.includes("redes")) {
+    reply = "📱 Síguenos en Instagram:\n👉 https://instagram.com/tucliente";
+  }
+  else if (msg.includes("comprar")) {
+    reply = "💳 Compra aquí:\n👉 https://linkdepago.com";
   }
   else if (msg.includes("gracias")) {
-    reply = "¡De nada! 😊 ¿Algo más?";
+    reply = "😊 ¡Con gusto! Estoy para ayudarte";
   }
   else {
-    reply = "Lo siento, no entendí. Escribe: cursos, pdf, redes o comprar";
+    reply = "🤖 No entendí eso. Prueba con: cursos, precio, pdf o comprar";
   }
 
   res.json({ reply });
 });
-
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, "0.0.0.0", () => {
