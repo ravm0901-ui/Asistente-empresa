@@ -1,84 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <title>Asistente</title>
+
   <style>
-body {
-  font-family: Arial;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
+    body {
+      font-family: Arial;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-#chatbox {
-  width: 400px;
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
+    #chatbox {
+      width: 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
 
-#chat {
-  height: 350px;
-  overflow-y: auto;
-  padding: 10px;
-  border-radius: 10px;
-  background: #f9f9f9;
-  margin-bottom: 10px;
-}
+    #chat {
+      height: 350px;
+      overflow-y: auto;
+      padding: 10px;
+      border-radius: 10px;
+      background: #f9f9f9;
+      margin-bottom: 10px;
+    }
 
-/* burbujas */
-.msg-user {
-  background: #667eea;
-  color: white;
-  padding: 10px;
-  border-radius: 15px;
-  margin: 5px 0;
-  text-align: right;
-}
+    .msg-user {
+      background: #667eea;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 15px;
+      margin: 5px 0;
+      text-align: right;
+    }
 
-.msg-bot {
-  background: #e4e6eb;
-  padding: 10px;
-  border-radius: 15px;
-  margin: 5px 0;
-}
+    .msg-bot {
+      background: #e4e6eb;
+      padding: 8px 12px;
+      border-radius: 15px;
+      margin: 5px 0;
+    }
 
-/* input */
-#input-area {
-  display: flex;
-  gap: 10px;
-}
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
 
-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-}
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+    }
 
-button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 20px;
-  background: #667eea;
-  color: white;
-  cursor: pointer;
-}
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      background: #667eea;
+      color: white;
+      cursor: pointer;
+    }
 
-button:hover {
-  background: #5a67d8;
-}
-
-#clear-btn {
-  width: 100%;
-  margin-top: 10px;
-  background: #ff6b6b;
-}
-</style>
+    #clear-btn {
+      width: 100%;
+      margin-top: 10px;
+      background: #ff6b6b;
+    }
+  </style>
 </head>
+
 <body>
 
 <div id="chatbox">
@@ -90,19 +88,17 @@ button:hover {
     <input id="msg" placeholder="Escribe tu mensaje..." onkeypress="handleKeyPress(event)">
     <button onclick="send()">Enviar</button>
   </div>
+
   <button id="clear-btn" onclick="clearChat()">Limpiar Chat</button>
 </div>
 
-<script>
 <script>
 window.onload = function() {
   addMessage("Bot", "Hola 👋 ¿En qué puedo ayudarte? Escribe: cursos, pdf, redes o comprar", "bot");
 };
 
 function handleKeyPress(event) {
-  if (event.key === "Enter") {
-    send();
-  }
+  if (event.key === "Enter") send();
 }
 
 async function send() {
@@ -126,18 +122,17 @@ async function send() {
   }
 
   document.getElementById("msg").value = "";
-  document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 }
 
 function addMessage(sender, text, type) {
   let chat = document.getElementById("chat");
 
-  let msgDiv = document.createElement("div");
-  msgDiv.className = type === "user" ? "msg-user" : "msg-bot";
+  let div = document.createElement("div");
+  div.className = type === "user" ? "msg-user" : "msg-bot";
 
-  msgDiv.innerHTML = "<b>" + sender + ":</b> " + text.replace(/\n/g, "<br>");
+  div.innerHTML = "<b>" + sender + ":</b> " + text.replace(/\n/g, "<br>");
 
-  chat.appendChild(msgDiv);
+  chat.appendChild(div);
 }
 
 function clearChat() {
