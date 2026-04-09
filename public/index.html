@@ -95,7 +95,12 @@ button:hover {
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  addMessage("Bot", "Hola 👋 ¿En qué puedo ayudarte? Escribe: cursos, pdf, redes o comprar", "bot");
+  loadChat();
+
+  if (!localStorage.getItem("chat")) {
+    addMessage("Bot", "Hola 👋 ¿En qué puedo ayudarte?", "bot");
+    saveChat();
+  }
 });
 
 function handleKeyPress(event) {
@@ -110,6 +115,10 @@ async function send() {
 
   addMessage("Tú", msg, "user");
 
+  document.getElementById("msg").value = "";
+
+  showTyping(); // 👈 aparece "escribiendo"
+
   let res = await fetch("/chat", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
@@ -118,10 +127,10 @@ async function send() {
 
   let data = await res.json();
 
+  removeTyping(); // 👈 desaparece
+
   addMessage("Bot", data.reply, "bot");
 
-  document.getElementById("msg").value = "";
-  document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 }
 
 function addMessage(sender, text, type) {
@@ -140,6 +149,35 @@ function addMessage(sender, text, type) {
 function clearChat() {
   document.getElementById("chat").innerHTML = "";
   addMessage("Bot", "Chat limpiado. ¿En qué puedo ayudarte?", "bot");
+function showTyping() {
+  let chat = document.getElementById("chat");
+
+  let typing = document.createElement("div");
+  typing.className = "msg-bot";
+  typing.id = "typing";
+
+  typing.innerHTML = "Escribiendo... ⏳";
+
+  chat.appendChild(typing);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function removeTyping() {
+  let typing = document.getElementById("typing");
+  if (typing) typing.remove();
+}
+
+function saveChat() {
+  localStorage.setItem("chat", document.getElementById("chat").innerHTML);
+}
+
+function loadChat() {
+  let saved = localStorage.getItem("chat");
+  if (saved) {
+    document.getElementById("chat").innerHTML = saved;
+  }
+}
+
 }
 </script>
 
