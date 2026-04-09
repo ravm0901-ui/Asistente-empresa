@@ -108,7 +108,7 @@ async function send() {
   addMessage("Tú", msg, "user");
 
   try {
-    let res = await fetch("/chat", {
+    let res = await fetch("https://asistente-empresa-production.up.railway.app/chat", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({message: msg})
