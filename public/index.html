@@ -86,7 +86,7 @@ button:hover {
 
   <div id="chat"></div>
 
-  <div id="input-area">
+  <div class="input-area">
     <input id="msg" placeholder="Escribe tu mensaje..." onkeypress="handleKeyPress(event)">
     <button onclick="send()">Enviar</button>
   </div>
@@ -94,14 +94,10 @@ button:hover {
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  loadChat();
-
-  if (!localStorage.getItem("chat")) {
-    addMessage("Bot", "Hola 👋 ¿En qué puedo ayudarte?", "bot");
-    saveChat();
-  }
-});
+<script>
+window.onload = function() {
+  addMessage("Bot", "Hola 👋 ¿En qué puedo ayudarte? Escribe: cursos, pdf, redes o comprar", "bot");
+};
 
 function handleKeyPress(event) {
   if (event.key === "Enter") {
@@ -115,22 +111,22 @@ async function send() {
 
   addMessage("Tú", msg, "user");
 
+  try {
+    let res = await fetch("/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({message: msg})
+    });
+
+    let data = await res.json();
+    addMessage("Bot", data.reply, "bot");
+
+  } catch (error) {
+    addMessage("Bot", "⚠️ Error conectando con el servidor", "bot");
+  }
+
   document.getElementById("msg").value = "";
-
-  showTyping(); // 👈 aparece "escribiendo"
-
-  let res = await fetch("/chat", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({message: msg})
-  });
-
-  let data = await res.json();
-
-  removeTyping(); // 👈 desaparece
-
-  addMessage("Bot", data.reply, "bot");
-
+  document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 }
 
 function addMessage(sender, text, type) {
@@ -139,45 +135,14 @@ function addMessage(sender, text, type) {
   let msgDiv = document.createElement("div");
   msgDiv.className = type === "user" ? "msg-user" : "msg-bot";
 
-  msgDiv.innerHTML = text.replace(/\n/g, "<br>");
+  msgDiv.innerHTML = "<b>" + sender + ":</b> " + text.replace(/\n/g, "<br>");
 
   chat.appendChild(msgDiv);
-
-  chat.scrollTop = chat.scrollHeight;
 }
 
 function clearChat() {
   document.getElementById("chat").innerHTML = "";
   addMessage("Bot", "Chat limpiado. ¿En qué puedo ayudarte?", "bot");
-function showTyping() {
-  let chat = document.getElementById("chat");
-
-  let typing = document.createElement("div");
-  typing.className = "msg-bot";
-  typing.id = "typing";
-
-  typing.innerHTML = "Escribiendo... ⏳";
-
-  chat.appendChild(typing);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function removeTyping() {
-  let typing = document.getElementById("typing");
-  if (typing) typing.remove();
-}
-
-function saveChat() {
-  localStorage.setItem("chat", document.getElementById("chat").innerHTML);
-}
-
-function loadChat() {
-  let saved = localStorage.getItem("chat");
-  if (saved) {
-    document.getElementById("chat").innerHTML = saved;
-  }
-}
-
 }
 </script>
 
