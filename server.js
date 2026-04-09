@@ -4,32 +4,29 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
+// Ruta del chat
 app.post("/chat", (req, res) => {
   const msg = req.body.message.toLowerCase();
 
-  let reply = "";
+  let reply = "No entendí 🤔";
 
-  if (msg.includes("curso")) {
-    reply = "🎓 Cursos disponibles:\n👉 https://tusitio.com/cursos";
-  } 
-  else if (msg.includes("pdf")) {
-    reply = "📄 Descarga el catálogo:\n👉 /docs/catalogo.pdf";
-  } 
-  else if (msg.includes("redes")) {
-    reply = "📱 Instagram: https://instagram.com/tucliente";
-  } 
-  else if (msg.includes("comprar")) {
-    reply = "💳 Compra aquí:\n👉 https://linkdepago.com";
-  } 
-  else {
-    reply = "Hola 👋 escribe: cursos, pdf, redes o comprar";
+  if (msg.includes("hola")) {
+    reply = "Hola 👋 ¿Cómo estás?";
+  } else if (msg.includes("cursos")) {
+    reply = "Tenemos cursos de programación 🚀";
+  } else if (msg.includes("pdf")) {
+    reply = "Aquí tienes un PDF: ejemplo.com/pdf";
+  } else if (msg.includes("redes")) {
+    reply = "Síguenos en Instagram 📸";
+  } else if (msg.includes("comprar")) {
+    reply = "Puedes comprar aquí: ejemplo.com/tienda";
   }
 
   res.json({ reply });
 });
 
+// Servidor
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-  console.log("Servidor corriendo 🚀 en puerto " + PORT);
+  console.log("Servidor corriendo en puerto " + PORT);
 });
