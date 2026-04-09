@@ -2,90 +2,83 @@
 <html>
 <head>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+    <style>
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
 
-    #chatbox {
-      width: 450px;
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      display: flex;
-      flex-direction: column;
-    }
+#chatbox {
+  width: 400px;
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
 
-    #chat {
-      height: 350px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      background: #f9f9f9;
-    }
+#chat {
+  height: 350px;
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f9f9f9;
+  margin-bottom: 10px;
+}
 
-    #input-area {
-      display: flex;
-      gap: 10px;
-    }
+/* burbujas */
+.msg-user {
+  background: #667eea;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 15px;
+  margin: 5px 0;
+  text-align: right;
+}
 
-    input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      outline: none;
-    }
+.msg-bot {
+  background: #e4e6eb;
+  padding: 8px 12px;
+  border-radius: 15px;
+  margin: 5px 0;
+}
 
-    button {
-      padding: 10px 15px;
-      background: #667eea;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+/* input */
+.input-area {
+  display: flex;
+  gap: 10px;
+}
 
-    button:hover {
-      background: #5a6fd8;
-    }
+input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
 
-    #clear-btn {
-      background: #ff6b6b;
-      margin-top: 10px;
-    }
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  background: #667eea;
+  color: white;
+  cursor: pointer;
+}
 
-    #clear-btn:hover {
-      background: #ff5252;
-    }
+button:hover {
+  background: #5a67d8;
+}
 
-    .message {
-      margin: 5px 0;
-      padding: 8px 12px;
-      border-radius: 10px;
-      max-width: 80%;
-    }
-
-    .user {
-      background: #667eea;
-      color: white;
-      align-self: flex-end;
-      margin-left: auto;
-    }
-
-    .bot {
-      background: #e0e0e0;
-      color: #333;
-    }
+#clear {
+  width: 100%;
+  margin-top: 10px;
+  background: #ff6b6b;
+}
+</style>
   </style>
 </head>
 <body>
@@ -135,10 +128,15 @@ async function send() {
 
 function addMessage(sender, text, type) {
   let chat = document.getElementById("chat");
+
   let msgDiv = document.createElement("div");
-  msgDiv.className = "message " + type;
-  msgDiv.innerHTML = "<b>" + sender + ":</b> " + text.replace(/\n/g, "<br>");
+  msgDiv.className = type === "user" ? "msg-user" : "msg-bot";
+
+  msgDiv.innerHTML = text.replace(/\n/g, "<br>");
+
   chat.appendChild(msgDiv);
+
+  chat.scrollTop = chat.scrollHeight;
 }
 
 function clearChat() {
